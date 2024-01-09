@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ng-enjoyhint": {
+    "ng-enjoyhint-demo-app": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/ng-enjoyhint",
+            "outputPath": "dist/ng-enjoyhint-demo-app",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -30,6 +30,7 @@
               "src/assets"
             ],
             "styles": [
+              "node_modules/@angular/cdk/overlay-prebuilt.css",
               "src/styles.scss"
             ],
             "scripts": []
@@ -62,10 +63,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "ng-enjoyhint:build:production"
+              "buildTarget": "ng-enjoyhint-demo-app:build:production"
             },
             "development": {
-              "buildTarget": "ng-enjoyhint:build:development"
+              "buildTarget": "ng-enjoyhint-demo-app:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -73,7 +74,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "ng-enjoyhint:build"
+            "buildTarget": "ng-enjoyhint-demo-app:build"
           }
         },
         "test": {
@@ -96,6 +97,42 @@
           }
         }
       }
+    },
+    "ng-enjoyhint": {
+      "projectType": "library",
+      "root": "projects/ng-enjoyhint",
+      "sourceRoot": "projects/ng-enjoyhint/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/ng-enjoyhint/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ng-enjoyhint/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/ng-enjoyhint/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "tsConfig": "projects/ng-enjoyhint/tsconfig.spec.json",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ]
+          }
+        }
+      }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

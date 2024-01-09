@@ -31,13 +31,3 @@ npm install ng-enjoyhint
     },
   ]);
   ```
-
-## How it works
-
-When running a tutorial, an overlay is added to the page. Four semi-transparent elements, one on each side of the target element, de-emphasize
-the rest of the page and block user input. A description is shown on the side of the target element. The user can complete the configured event
-(normally a click) on the target element to advance to the next step of the tutorial. When the last step is completed, the overlay is removed.
-
-## License
-
-MIT
