@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { EnjoyhintService } from './enjoyhint.service';
+import { EnjoyHintService } from './enjoyhint.service';
 
 describe('NgEnjoyhintLibService', () => {
-  let service: EnjoyhintService;
+  let service: EnjoyHintService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(EnjoyhintService);
+    service = TestBed.inject(EnjoyHintService);
   });
 
   it('should be created', () => {

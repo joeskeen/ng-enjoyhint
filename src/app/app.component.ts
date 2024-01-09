@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { EnjoyhintService } from 'ng-enjoyhint';
+import { EnjoyHintService } from 'ng-enjoyhint';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +15,7 @@ export class AppComponent implements AfterViewInit {
 
   constructor(
     private readonly host: ElementRef,
-    private readonly enjoyHintService: EnjoyhintService
+    private readonly enjoyHintService: EnjoyHintService
   ) {}
 
   async ngAfterViewInit() {

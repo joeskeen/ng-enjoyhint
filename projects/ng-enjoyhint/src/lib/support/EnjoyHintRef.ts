@@ -1,5 +1,5 @@
 import { EventEmitter } from '@angular/core';
-import { Tutorial } from '../tutorial/Tutorial';
+import { Tutorial } from './Tutorial';
 import { IEnjoyHintOptions } from '../lib.interfaces';
 
 export class EnjoyHintRef {

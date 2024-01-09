@@ -18,7 +18,6 @@ import { Component, Input } from '@angular/core';
     `
       :host {
         display: block;
-        background-color: rgba(0, 0, 0, 1);
         position: fixed;
         transition: top 500ms ease-in-out, left 500ms ease-in-out;
       }

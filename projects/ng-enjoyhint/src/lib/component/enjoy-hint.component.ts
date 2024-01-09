@@ -24,12 +24,11 @@ import {
 } from 'rxjs';
 import { animate, style, transition, trigger } from '@angular/animations';
 import {
-  ConnectedOverlayPositionChange,
   ConnectionPositionPair,
+  FlexibleConnectedPositionStrategy,
   Overlay,
   OverlayPositionBuilder,
   OverlayRef,
-  STANDARD_DROPDOWN_BELOW_POSITIONS,
 } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { JsonPipe, NgClass } from '@angular/common';
@@ -39,9 +38,10 @@ import { ForceFieldComponent } from '../support/force-field.component';
 import { provideWindow } from '../util/dom-helpers';
 import { DirectionPipe } from '../support/direction.pipe';
 import { ALL_SIDES } from '../util/positions';
+import { TextOrTemplateComponent } from '../support/text-or-template.component';
 
 @Component({
-  selector: 'lib-ng-enjoyhint-lib',
+  selector: 'lib-enjoyhint',
   standalone: true,
   imports: [
     ForceFieldComponent,
@@ -49,29 +49,35 @@ import { ALL_SIDES } from '../util/positions';
     JsonPipe,
     NgClass,
     DirectionPipe,
+    TextOrTemplateComponent,
   ],
-  templateUrl: './tutorial.component.html',
-  styleUrl: './tutorial.component.scss',
+  templateUrl: './enjoy-hint.component.html',
+  styleUrl: './enjoy-hint.component.scss',
   animations: [
     trigger('fadeIn', [
       transition(':enter', [style({ opacity: 0 }), animate(500)]),
     ]),
   ],
   providers: [provideWindow()],
+  host: {
+    '[style.z-index]': 'options.overlayZIndex',
+  },
 })
-export class TutorialComponent {
+export class EnjoyHintComponent {
   @ViewChild('instructions') instructions!: TemplateRef<any>;
 
   static readonly defaultOptions: IEnjoyHintOptions = {
     padding: 5,
     fontFamily: 'sans-serif',
-    backdropColor: 'black'
+    backdropColor: 'black',
+    overlayZIndex: 100,
   };
-  readonly forceFieldSize: Signal<{ width: number; height: number }>;
+  readonly viewSize: Signal<{ width: number; height: number }>;
+  readonly instructionsWidth = computed(() => this.viewSize().width / 4);
   readonly animating = signal(false);
   readonly focusElement = computed(() => {
     const step = this.ref.tutorial.step();
-    if (!step) {
+    if (!step?.selector) {
       return null;
     }
     return document.querySelector<HTMLElement>(step.selector);
@@ -90,7 +96,7 @@ export class TutorialComponent {
   });
   readonly ffPositions = computed(() => {
     const bounds = this.elementBounds();
-    const size = this.forceFieldSize();
+    const size = this.viewSize();
     return {
       left: {
         x: -1 * size.width + bounds.x - this.options.padding,
@@ -116,7 +122,10 @@ export class TutorialComponent {
   readonly positionStrategy = computed(() => {
     const element = this.focusElement();
     if (!element) {
-      return null;
+      return this.overlayPositionBuilder
+        .global()
+        .centerHorizontally()
+        .centerVertically();
     }
     return this.overlayPositionBuilder
       .flexibleConnectedTo(element)
@@ -136,14 +145,14 @@ export class TutorialComponent {
     private readonly zone: NgZone
   ) {
     this.options = {
-      ...TutorialComponent.defaultOptions,
+      ...EnjoyHintComponent.defaultOptions,
       ...ref.options,
     };
     const getSize = () => ({
       width: window.innerWidth,
       height: window.innerHeight,
     });
-    this.forceFieldSize = toSignal(
+    this.viewSize = toSignal(
       fromEvent(window, 'resize').pipe(map(getSize)),
       { initialValue: getSize() }
     );
@@ -182,17 +191,19 @@ export class TutorialComponent {
 
   createOverlay() {
     const step = this.step();
-    const element = this.focusElement();
     const positionStrategy = this.positionStrategy();
-    if (!element || !step || !positionStrategy) {
+    const element = this.focusElement();
+    if (!step || !positionStrategy) {
       return;
     }
 
-    positionStrategy.positionChanges
-      .pipe(takeUntil(this.thisIsDestroyed))
-      .subscribe((x) => {
-        this.zone.run(() => this.position.set(x.connectionPair));
-      });
+    if (positionStrategy instanceof FlexibleConnectedPositionStrategy) {
+      positionStrategy.positionChanges
+        .pipe(takeUntil(this.thisIsDestroyed))
+        .subscribe((x) => {
+          this.zone.run(() => this.position.set(x.connectionPair));
+        });
+    }
 
     const overlayRef = this.overlay.create({
       positionStrategy,
@@ -212,6 +223,9 @@ export class TutorialComponent {
   }
   next() {
     this.ref.tutorial.nextStep();
+    if (!this.step()) {
+      this.close();
+    }
   }
   skip() {
     this.close();

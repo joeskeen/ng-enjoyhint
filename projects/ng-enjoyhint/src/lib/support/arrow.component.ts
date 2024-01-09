@@ -1,11 +1,19 @@
-import { Component, Input, computed, signal } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  NgZone,
+  OnDestroy,
+  computed,
+  signal,
+} from '@angular/core';
 import { Direction } from './direction.pipe';
 
 @Component({
   selector: 'lib-arrow',
   standalone: true,
   template: `
-    <svg viewBox="-10 -10 110 110">
+    <svg [attr.viewBox]="viewBox()">
       <defs>
         <marker
           id="arrowMarker"
@@ -26,7 +34,7 @@ import { Direction } from './direction.pipe';
   styles: `
     :host {
       display: block;
-      width: 100px;
+      width: 100%;
       height: 100px;
     }
     path {
@@ -36,7 +44,7 @@ import { Direction } from './direction.pipe';
     }
   `,
 })
-export class ArrowComponent {
+export class ArrowComponent implements OnDestroy {
   private readonly _direction = signal<Direction | undefined>(undefined);
   @Input()
   public get direction(): Direction | undefined {
@@ -46,8 +54,51 @@ export class ArrowComponent {
     this._direction.set(value);
   }
 
+  private readonly _pointToElement = signal<HTMLElement | null>(null);
+  @Input()
+  public get pointToElement(): HTMLElement | null {
+    return this._pointToElement();
+  }
+  public set pointToElement(value: HTMLElement | null) {
+    this._pointToElement.set(value);
+  }
+
+  readonly viewBox = computed(() => {
+    const bounds = this.bounds();
+    if (!bounds) {
+      return `0 0 0 0`;
+    }
+    return `0 0 ${bounds.width} ${bounds.height}`;
+  });
+
   readonly pathData = computed(() => {
+    const bounds = this.bounds() ?? { x: 0, y: 0, width: 0, height: 0 };
+    const absCenterX = bounds.x + bounds.width / 2;
+    const absCenterY = bounds.y + bounds.height / 2;
+
+    const padding = 5;
+    const minX = padding;
+    const minY = padding;
+    const maxX = bounds.width - padding;
+    const maxY = bounds.height - padding;
+    const width = maxX - minX;
+    const height = maxY - minY;
+    const halfWidth = width / 2;
+    const halfHeight = height / 2;
+
     const direction = this._direction();
+    const pointToElement = this._pointToElement();
+    const elementCenterPoint = pointToElement?.getBoundingClientRect() ?? {
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+    };
+    const elementCenterX = elementCenterPoint.x + elementCenterPoint.width / 2;
+    const elementCenterY = elementCenterPoint.y + elementCenterPoint.height / 2;
+
+    const dx = elementCenterX - absCenterX;
+    const dy = elementCenterY - absCenterY;
 
     let fromX = 0,
       fromY = 0,
@@ -58,39 +109,60 @@ export class ArrowComponent {
 
     switch (direction) {
       case 'top':
-        fromX = 50;
-        fromY = 0;
-        toX = 50;
-        toY = 100;
-        controlPointX = 50;
-        controlPointY = 50;
+        fromX = halfWidth;
+        fromY = minY;
+        toX = halfWidth + dx;
+        toY = maxY;
+        controlPointX = halfWidth;
+        controlPointY = halfHeight;
         break;
       case 'bottom':
-        fromX = 50;
-        fromY = 100;
-        toX = 50;
-        toY = 0;
-        controlPointX = 50;
-        controlPointY = 50;
+        fromX = halfWidth;
+        fromY = maxY;
+        toX = halfWidth + dx;
+        toY = minY;
+        controlPointX = halfWidth;
+        controlPointY = halfHeight;
         break;
       case 'left':
-        fromX = 0;
-        fromY = 0;
-        toX = 100;
-        toY = 50;
-        controlPointX = 0;
-        controlPointY = 50;
+        fromX = halfWidth;
+        fromY = minY;
+        toX = maxX;
+        toY = halfHeight + dy;
+        controlPointX = halfWidth;
+        controlPointY = halfHeight;
         break;
       case 'right':
-        fromX = 100;
-        fromY = 0;
-        toX = 0;
-        toY = 50;
-        controlPointX = 100;
-        controlPointY = 50;
+        fromX = halfWidth;
+        fromY = minY;
+        toX = minX;
+        toY = halfHeight + dy;
+        controlPointX = halfWidth;
+        controlPointY = halfHeight;
         break;
     }
 
+    toX = Math.max(minX, Math.min(maxX, toX));
+    toY = Math.max(minY, Math.min(maxY, toY));
+
     return `M${fromX},${fromY} Q${controlPointX},${controlPointY} ${toX},${toY}`;
   });
+
+  private readonly bounds = signal<DOMRect | undefined>(undefined);
+  private readonly resizeObserver: ResizeObserver;
+
+  constructor(private readonly host: ElementRef<SVGElement>, zone: NgZone) {
+    const observer = new ResizeObserver(() => {
+      zone.run(() => {
+        this.bounds.set(host.nativeElement.getBoundingClientRect());
+      });
+    });
+    observer.observe(host.nativeElement);
+    this.resizeObserver = observer;
+  }
+
+  ngOnDestroy() {
+    this.resizeObserver.unobserve(this.host.nativeElement);
+    this.resizeObserver.disconnect();
+  }
 }

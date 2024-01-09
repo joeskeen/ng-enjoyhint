@@ -8,8 +8,21 @@ export class Tutorial {
     () => this.steps[this.stepIndex()]
   );
   readonly hasPrevious = computed(() => this.stepIndex() > 0);
+  readonly steps: ITutorialStep[];
 
-  constructor(public readonly steps: ITutorialStep[]) {}
+  constructor(steps: ITutorialStep[]) {
+    const lastStep = steps.at(-1);
+    if (lastStep) {
+      lastStep.nextButton = {
+        text: 'Finish',
+        ...(lastStep.nextButton ?? {}),
+      }
+      if (lastStep.event === 'next') {
+        lastStep.hideSkip = lastStep.hideSkip ?? true;
+      }
+    }
+    this.steps = steps;
+  }
 
   reset() {
     this._stepIndex.set(0);
