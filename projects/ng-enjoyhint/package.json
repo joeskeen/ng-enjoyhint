@@ -5,6 +5,7 @@
     "type": "git",
     "url": "https://github.com/joeskeen/ng-enjoyhint.git"
   },
+  "homepage": "https://stackblitz.com/~/github.com/joeskeen/ng-enjoyhint",
   "peerDependencies": {
     "@angular/animations": "^17.0.0",
     "@angular/cdk": "^17.0.0",
