@@ -3,8 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "prestart": "npm run build:lib",
-    "start": "ng serve",
+    "start": "concurrently \"ng build ng-enjoyhint --watch\" \"ng serve\"",
     "build:docs": "typedoc",
     "postbuild:docs": "cp projects/ng-enjoyhint/README.md ./",
     "build:demo-app": "ng build",
