@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
+    "prestart": "npm run build",
     "start": "ng serve",
     "build:docs": "typedoc",
     "postbuild:docs": "cp projects/ng-enjoyhint/README.md ./",
@@ -26,7 +27,7 @@
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2",
-    "ng-enjoyhint": "./projects/ng-enjoyhint"
+    "ng-enjoyhint": "./dist/ng-enjoyhint"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^17.0.5",
