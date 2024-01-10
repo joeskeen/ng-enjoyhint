@@ -1,0 +1,22 @@
+{
+  "tsconfig": "projects/ng-enjoyhint/tsconfig.lib.json",
+  "out": "./projects/ng-enjoyhint/",
+  "entryPoints": ["./projects/ng-enjoyhint/src/public-api.ts"],
+  "excludeInternal": true,
+  "excludePrivate": true,
+  "cleanOutputDir": false, // IMPORTANT: don't wipe out the entire project when generating docs
+  "githubPages": false,
+  "readme": "projects/ng-enjoyhint/src/docs/README.md",
+
+  "plugin": ["typedoc-plugin-markdown"],
+  /* typedoc-plugin-markdown@next options, see https://typedoc-plugin-markdown.org/options */
+  "preserveAnchorCasing": true,
+  "namedAnchors": true,
+  "outputFileStrategy": "modules",
+  "mergeReadme": true,
+  "excludeGroups": true,
+  "parametersFormat": "table",
+  "propertiesFormat": "table",
+  "hidePageHeader": true,
+  "hidePageTitle": true
+}

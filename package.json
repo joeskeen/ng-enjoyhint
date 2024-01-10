@@ -4,9 +4,11 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "build:docs": "typedoc",
+    "postbuild:docs": "cp projects/ng-enjoyhint/README.md ./",
     "build:demo-app": "ng build",
     "build:lib": "ng build ng-enjoyhint",
-    "build": "npm run build:lib && npm run build:demo-app",
+    "build": "npm run build:docs && npm run build:lib && npm run build:demo-app",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -21,10 +23,10 @@
     "@angular/platform-browser": "^17.0.0",
     "@angular/platform-browser-dynamic": "^17.0.0",
     "@angular/router": "^17.0.0",
-    "ng-enjoyhint": "^1.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.14.2"
+    "zone.js": "~0.14.2",
+    "ng-enjoyhint": "./projects/ng-enjoyhint"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^17.0.5",
@@ -38,6 +40,8 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "ng-packagr": "^17.0.0",
+    "typedoc": "^0.25.7",
+    "typedoc-plugin-markdown": "^4.0.0-next.39",
     "typescript": "~5.2.2"
   }
 }

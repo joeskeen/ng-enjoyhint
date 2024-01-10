@@ -7,8 +7,12 @@ import { EnjoyHintService } from 'ng-enjoyhint';
   selector: 'app-root',
   standalone: true,
   imports: [CommonModule, RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
+  template: ``,
+  styles: `
+    :host {
+      width: 100%;
+      height: 100%;
+    }`,
 })
 export class AppComponent implements AfterViewInit {
   title = 'ng-enjoyhint';
@@ -22,12 +26,14 @@ export class AppComponent implements AfterViewInit {
     const elements = this.spawnElements();
 
     console.info('Starting tutorial...');
-    
+
     await this.enjoyHintService.runTutorial(
       elements.map((e) => ({
         selector: `#${e.id}`,
         event: 'click',
         description: `Click ${e.id}`,
+        stepStart: () => e.style.setProperty('z-index', '10'),
+        stepEnd: () => e.style.setProperty('z-index', null),
       }))
     );
 

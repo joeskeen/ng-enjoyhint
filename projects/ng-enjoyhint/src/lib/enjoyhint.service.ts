@@ -1,6 +1,6 @@
 import { Injectable, Injector } from '@angular/core';
 import { EnjoyHintComponent } from './component/enjoy-hint.component';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, zip } from 'rxjs';
 import { EnjoyHintRef } from './support/EnjoyHintRef';
 import { Elements } from './util/dom-helpers';
 import { IEnjoyHintOptions, ITutorialStep } from './lib.interfaces';
@@ -19,13 +19,23 @@ import { ComponentPortal } from '@angular/cdk/portal';
     ),
 })
 export class EnjoyHintService {
+  /** @ignore */
   constructor(
     private readonly overlay: Overlay,
     private readonly elements: Elements,
     private readonly originalOverflow: string
   ) {}
 
-  async runTutorial(steps: ITutorialStep[], options?: Partial<IEnjoyHintOptions>) {
+  /**
+   * Run an interactive tutorial
+   * @param steps the tutorial steps to run
+   * @param options optional object to override the default behavior
+   * @returns a promise resolving when the tutorial is closed; resolves to `true` if the tutorial was completed, `false` if it was skipped
+   */
+  async runTutorial(
+    steps: ITutorialStep[],
+    options?: Partial<IEnjoyHintOptions>
+  ): Promise<boolean> {
     const tutorial = new Tutorial(steps);
 
     const enjoyHintRef = new EnjoyHintRef(tutorial, options);
@@ -35,6 +45,14 @@ export class EnjoyHintService {
       positionStrategy: this.overlay.position().global(),
       panelClass: 'ng-enjoyhint-overlay',
     });
+    const zIndex = options?.overlayZIndex;
+    if (zIndex !== undefined) {
+      const globalOverlayWrapper = overlayRef.hostElement;
+      const cdkOverlayContainer = globalOverlayWrapper.parentElement;
+      [globalOverlayWrapper, cdkOverlayContainer].forEach((e) =>
+        e?.style.setProperty('z-index', zIndex.toString())
+      );
+    }
     const portal = new ComponentPortal(
       EnjoyHintComponent,
       null,
@@ -46,7 +64,7 @@ export class EnjoyHintService {
     try {
       this.elements.body.style.overflow = 'hidden';
       overlayRef.attach(portal);
-      await firstValueFrom(enjoyHintRef.onClose);
+      return await firstValueFrom(enjoyHintRef.onClose);
     } finally {
       this.elements.body.style.overflow = this.originalOverflow;
       overlayRef.detach();

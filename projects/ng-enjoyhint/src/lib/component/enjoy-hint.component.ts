@@ -1,6 +1,7 @@
 import {
   Component,
   DestroyRef,
+  HostBinding,
   NgZone,
   Signal,
   TemplateRef,
@@ -58,19 +59,22 @@ import { TextOrTemplateComponent } from '../support/text-or-template.component';
       transition(':enter', [style({ opacity: 0 }), animate(500)]),
     ]),
   ],
-  providers: [provideWindow()],
-  host: {
-    '[style.z-index]': 'options.overlayZIndex',
-  },
+  providers: [provideWindow()]
 })
 export class EnjoyHintComponent {
   @ViewChild('instructions') instructions!: TemplateRef<any>;
+  @HostBinding('style.opacity') readonly opacity: string;
 
   static readonly defaultOptions: IEnjoyHintOptions = {
     padding: 5,
     fontFamily: 'sans-serif',
     backdropColor: 'black',
-    overlayZIndex: 100,
+    overlayZIndex: undefined,
+    backdropOpacity: 0.75,
+    foregroundColor: 'white',
+    nextButton: { text: 'Next' },
+    skipButton: { text: 'Skip' },
+    previousButton: { text: 'Previous' },
   };
   readonly viewSize: Signal<{ width: number; height: number }>;
   readonly instructionsWidth = computed(() => this.viewSize().width / 4);
@@ -118,6 +122,7 @@ export class EnjoyHintComponent {
   });
   readonly step = computed(() => this.ref.tutorial.step());
   readonly options: IEnjoyHintOptions;
+  
   private overlayRef: OverlayRef | null = null;
   readonly positionStrategy = computed(() => {
     const element = this.focusElement();
@@ -148,14 +153,14 @@ export class EnjoyHintComponent {
       ...EnjoyHintComponent.defaultOptions,
       ...ref.options,
     };
+    this.opacity = this.options.backdropOpacity.toString();
     const getSize = () => ({
       width: window.innerWidth,
       height: window.innerHeight,
     });
-    this.viewSize = toSignal(
-      fromEvent(window, 'resize').pipe(map(getSize)),
-      { initialValue: getSize() }
-    );
+    this.viewSize = toSignal(fromEvent(window, 'resize').pipe(map(getSize)), {
+      initialValue: getSize(),
+    });
 
     this.thisIsDestroyed = from(
       new Promise<void>((resolve) =>
@@ -172,7 +177,7 @@ export class EnjoyHintComponent {
       .subscribe(() => {
         this.ref.tutorial.nextStep();
         if (!this.step()) {
-          this.close();
+          this.close(true);
         }
       });
 
@@ -209,6 +214,13 @@ export class EnjoyHintComponent {
       positionStrategy,
       hasBackdrop: false,
     });
+
+    const zIndex = this.options.overlayZIndex;
+    if (zIndex !== undefined) {
+      const globalOverlayWrapper = overlayRef.hostElement;
+      globalOverlayWrapper.style.setProperty('z-index', zIndex.toString());
+    }
+
     const overlayComponent = new TemplatePortal(
       this.instructions,
       this.viewContainerRef
@@ -224,13 +236,13 @@ export class EnjoyHintComponent {
   next() {
     this.ref.tutorial.nextStep();
     if (!this.step()) {
-      this.close();
+      this.close(true);
     }
   }
   skip() {
-    this.close();
+    this.close(false);
   }
-  close() {
-    this.ref.close();
+  close(result = false) {
+    this.ref.close(result);
   }
 }

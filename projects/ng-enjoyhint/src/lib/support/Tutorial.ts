@@ -16,12 +16,13 @@ export class Tutorial {
       lastStep.nextButton = {
         text: 'Finish',
         ...(lastStep.nextButton ?? {}),
-      }
+      };
       if (lastStep.event === 'next') {
         lastStep.hideSkip = lastStep.hideSkip ?? true;
       }
     }
     this.steps = steps;
+    this.startHook();
   }
 
   reset() {
@@ -34,7 +35,37 @@ export class Tutorial {
   }
 
   nextStep() {
+    this.endHook();
     this._stepIndex.update((index) => index + 1);
+    this.startHook();
+  }
+
+  private startHook() {
+    const currentStepIndex = this._stepIndex();
+    const currentStep = this.step();
+    try {
+      currentStep?.stepStart?.();
+    } catch (e) {
+      console.error(
+        `Error executing stepEnd hook for step ${currentStepIndex}`,
+        e,
+        { currentStep }
+      );
+    }
+  }
+
+  private endHook() {
+    const newStepIndex = this._stepIndex();
+    const newStep = this.step();
+    try {
+      newStep?.stepEnd?.();
+    } catch (e) {
+      console.error(
+        `Error executing stepStart hook for step ${newStepIndex}`,
+        e,
+        { newStep }
+      );
+    }
   }
 
   previousStep() {

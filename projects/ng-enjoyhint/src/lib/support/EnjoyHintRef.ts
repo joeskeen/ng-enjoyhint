@@ -5,9 +5,9 @@ import { IEnjoyHintOptions } from '../lib.interfaces';
 export class EnjoyHintRef {
   constructor(public readonly tutorial: Tutorial, public readonly options: Partial<IEnjoyHintOptions> = {}) { }
 
-  readonly onClose = new EventEmitter<void>();
+  readonly onClose = new EventEmitter<boolean>();
 
-  close() {
-    this.onClose.emit();
+  close(completed = false) {
+    this.onClose.emit(completed);
   }
 }
