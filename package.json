@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "stackblitz": "npm install ng-enjoyhint && ng serve",
+    "stackblitz": "npm install ng-enjoyhint@latest && ng serve",
     "start": "npm run build:lib && ng serve",
     "build:docs": "typedoc",
     "postbuild:docs": "cp projects/ng-enjoyhint/README.md ./",
