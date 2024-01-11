@@ -1,6 +1,6 @@
 {
   "name": "ng-enjoyhint",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "repository": {
     "type": "git",
     "url": "https://github.com/joeskeen/ng-enjoyhint.git"
@@ -14,9 +14,10 @@
     "interactive",
     "documentation",
     "angular",
-    "ngx"
+    "ngx",
+    "highlight"
   ],
-  "homepage": "https://stackblitz.com/~/github.com/joeskeen/ng-enjoyhint",
+  "homepage": "https://stackblitz.com/~/github.com/joeskeen/ng-enjoyhint?startScript=stackblitz",
   "peerDependencies": {
     "@angular/animations": "^17.0.0",
     "@angular/cdk": "^17.0.0",

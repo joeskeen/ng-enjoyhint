@@ -3,14 +3,16 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "node -e 'child_process.spawn(`./node_modules/.bin/ng`, [`build`, `ng-enjoyhint`], {stdio:`inherit`}); setTimeout(() => process.exit(0), 10000)' && ng serve",
+    "stackblitz": "npm install ng-enjoyhint && ng serve",
+    "start": "npm run build:lib && ng serve",
     "build:docs": "typedoc",
     "postbuild:docs": "cp projects/ng-enjoyhint/README.md ./",
     "build:demo-app": "ng build",
     "build:lib": "ng build ng-enjoyhint",
     "build": "npm run build:docs && npm run build:lib && npm run build:demo-app",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "publish:npm": "npm run build && cd dist/ng-enjoyhint && npm pack && npm publish"
   },
   "private": true,
   "dependencies": {

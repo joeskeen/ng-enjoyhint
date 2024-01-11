@@ -84,7 +84,7 @@ a promise resolving when the tutorial is closed; resolves to `true` if the tutor
 
 ###### Source
 
-[lib/enjoyhint.service.ts:35](https://github.com/joeskeen/ng-enjoyhint/blob/3d4073c/projects/ng-enjoyhint/src/lib/enjoyhint.service.ts#L35)
+[lib/enjoyhint.service.ts:35](https://github.com/joeskeen/ng-enjoyhint/blob/d12a4cf/projects/ng-enjoyhint/src/lib/enjoyhint.service.ts#L35)
 
 ***
 
