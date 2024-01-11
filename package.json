@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "concurrently \"ng build ng-enjoyhint --watch\" \"ng serve\"",
+    "start": "node -e 'child_process.spawn(`./node_modules/.bin/ng`, [`build`, `ng-enjoyhint`], {stdio:`inherit`}); setTimeout(() => process.exit(0), 10000)' && ng serve",
     "build:docs": "typedoc",
     "postbuild:docs": "cp projects/ng-enjoyhint/README.md ./",
     "build:demo-app": "ng build",
@@ -33,7 +33,6 @@
     "@angular/cli": "^17.0.5",
     "@angular/compiler-cli": "^17.0.0",
     "@types/jasmine": "~5.1.0",
-    "concurrently": "^8.2.2",
     "jasmine-core": "~5.1.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
