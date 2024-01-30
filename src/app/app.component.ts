@@ -1,7 +1,9 @@
 import { AfterViewInit, Component, ElementRef, TemplateRef, ViewChild } from '@angular/core';
 import { CommonModule, JsonPipe } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { EnjoyHintService } from 'ng-enjoyhint';
+import { EnjoyHintService, ITemplateWithContext } from 'ng-enjoyhint';
+
+type MyTemplateContext = { myValue: {foo: string} };
 
 @Component({
   selector: 'app-root',
@@ -28,7 +30,7 @@ export class AppComponent implements AfterViewInit {
   template1!: TemplateRef<never>;
   
   @ViewChild('template2', { static: true, read: TemplateRef })
-  template2!: TemplateRef<any>;
+  template2!: TemplateRef<MyTemplateContext>;
 
   constructor(
     private readonly host: ElementRef,
@@ -59,7 +61,7 @@ export class AppComponent implements AfterViewInit {
       },
       {
         ...toStep(elements[2]),
-        details: {template: this.template2, context: { myValue: {foo: 'bar'}}},
+        details: {template: this.template2, context: { myValue: {foo: 'bar'}}} as ITemplateWithContext<MyTemplateContext>,
       },
       ...elements.slice(3).map(toStep)
     ]
