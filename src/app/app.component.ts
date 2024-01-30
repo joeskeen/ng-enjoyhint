@@ -1,21 +1,34 @@
-import { AfterViewInit, Component, ElementRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { AfterViewInit, Component, ElementRef, TemplateRef, ViewChild } from '@angular/core';
+import { CommonModule, JsonPipe } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { EnjoyHintService } from 'ng-enjoyhint';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet],
-  template: ``,
+  imports: [CommonModule, RouterOutlet, JsonPipe],
+  template: `
+    <ng-template #template1><span class="templateValue">Details is an ng-template</span></ng-template>
+    <ng-template #template2 let-myValue="myValue"><div class="templateValue">Details is an ng-template with custom context: <pre><code>{{myValue | json}}</code></pre></div></ng-template>
+  `,
   styles: `
     :host {
       width: 100%;
       height: 100%;
+    }
+    .templateValue {
+      background-color: rgba(255, 255, 255, 0.5);
+      padding: 1rem;
     }`,
 })
 export class AppComponent implements AfterViewInit {
   title = 'ng-enjoyhint';
+
+  @ViewChild('template1', { static: true, read: TemplateRef })
+  template1!: TemplateRef<never>;
+  
+  @ViewChild('template2', { static: true, read: TemplateRef })
+  template2!: TemplateRef<any>;
 
   constructor(
     private readonly host: ElementRef,
@@ -27,14 +40,29 @@ export class AppComponent implements AfterViewInit {
 
     console.info('Starting tutorial...');
 
-    await this.enjoyHintService.runTutorial(
-      elements.map((e) => ({
-        selector: `#${e.id}`,
-        event: 'click',
-        description: `Click ${e.id}`,
-        stepStart: () => e.style.setProperty('z-index', '10'),
-        stepEnd: () => e.style.setProperty('z-index', null),
-      }))
+    const toStep = (element: HTMLElement) => ({
+      selector: `#${element.id}`,
+      event: 'click',
+      description: `Click ${element.id}`,
+      stepStart: () => element.style.setProperty('z-index', '10'),
+      stepEnd: () => element.style.setProperty('z-index', null),
+    });
+
+    await this.enjoyHintService.runTutorial([
+      {
+        ...toStep(elements[0]),
+        details: 'Details is a string',
+      },
+      {
+        ...toStep(elements[1]),
+        details: this.template1,
+      },
+      {
+        ...toStep(elements[2]),
+        details: {template: this.template2, context: { myValue: {foo: 'bar'}}},
+      },
+      ...elements.slice(3).map(toStep)
+    ]
     );
 
     console.info('Tutorial complete!');

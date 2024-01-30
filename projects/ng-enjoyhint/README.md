@@ -53,6 +53,7 @@ MIT
 - [Interfaces](README.md#interfaces)
     - [IButtonOptions](README.md#IButtonOptions)
     - [IEnjoyHintOptions](README.md#IEnjoyHintOptions)
+    - [ITemplateWithContext](README.md#ITemplateWithContextT)
     - [ITutorialStep](README.md#ITutorialStep)
 
 <a id="EnjoyHintService" name="EnjoyHintService"></a>
@@ -84,7 +85,7 @@ a promise resolving when the tutorial is closed; resolves to `true` if the tutor
 
 ###### Source
 
-[lib/enjoyhint.service.ts:35](https://github.com/joeskeen/ng-enjoyhint/blob/d12a4cf/projects/ng-enjoyhint/src/lib/enjoyhint.service.ts#L35)
+[lib/enjoyhint.service.ts:35](https://github.com/joeskeen/ng-enjoyhint/blob/8fa5134/projects/ng-enjoyhint/src/lib/enjoyhint.service.ts#L35)
 
 ***
 
@@ -123,6 +124,25 @@ Custom settings for a tutorial button
 
 ***
 
+<a id="ITemplateWithContextT" name="ITemplateWithContextT"></a>
+
+### ITemplateWithContext\<T\>
+
+#### Type parameters
+
+| Type parameter | Value |
+| :------ | :------ |
+| `T` | `unknown` |
+
+#### Properties
+
+| Property | Type |
+| :------ | :------ |
+| <a id="context" name="context"></a> `context` | `T` |
+| <a id="template" name="template"></a> `template` | `TemplateRef`\<`T`\> |
+
+***
+
 <a id="ITutorialStep" name="ITutorialStep"></a>
 
 ### ITutorialStep
@@ -132,7 +152,7 @@ Custom settings for a tutorial button
 | Property | Type | Description |
 | :------ | :------ | :------ |
 | <a id="description" name="description"></a> `description` | `string` \| `TemplateRef`\<`any`\> | The main instructions for the step. Keep this short. |
-| <a id="details" name="details"></a> `details?` | `string` \| `TemplateRef`\<`any`\> | Additional text displayed in a smaller font under the description. <br />May be longer (but not too long). |
+| <a id="details" name="details"></a> `details?` | `string` \| `TemplateRef`\<`any`\> \| [`ITemplateWithContext`](README.md#ITemplateWithContextT)\<`unknown`\> | Additional text displayed in a smaller font under the description. <br />May be longer (but not too long). |
 | <a id="event" name="event"></a> `event` | `string` | The event to listen for on the element to move onto the next step.<br />Accepts any valid DOM event name, or 'next' to move on when the "Next" button is clicked. |
 | <a id="hideSkip" name="hideSkip"></a> `hideSkip?` | `boolean` | Whether or not to hide the "Skip" button.<br /><br />**Default**<br />` false ` |
 | <a id="nextButton-1" name="nextButton-1"></a> `nextButton?` | [`IButtonOptions`](README.md#IButtonOptions) | Custom settings for the "Next" button. |

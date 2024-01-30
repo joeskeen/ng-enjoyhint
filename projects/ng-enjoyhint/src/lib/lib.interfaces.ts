@@ -67,7 +67,7 @@ export interface ITutorialStep {
    * Additional text displayed in a smaller font under the description. 
    * May be longer (but not too long).
    */
-  details?: string | TemplateRef<any>;
+  details?: string | TemplateRef<any> | ITemplateWithContext;
   /**
    * Custom settings for the "Next" button.
    */
@@ -93,6 +93,11 @@ export interface ITutorialStep {
    * Callback to execute when the step is ended.
    */
   stepEnd?: () => void;
+}
+
+export interface ITemplateWithContext<T = unknown> {
+  template: TemplateRef<T>; 
+  context: T;
 }
 
 /** Custom settings for a tutorial button */
