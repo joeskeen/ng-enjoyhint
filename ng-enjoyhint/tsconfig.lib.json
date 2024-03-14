@@ -1,0 +1,16 @@
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declarationMap": false,
+    "inlineSourceMap": true,
+    "inlineSources": true,
+    "sourceMap": false,
+  },
+  "angularCompilerOptions": {
+    "compilationMode": "partial"
+  },
+  "files": ["src/public-api.ts"],
+  "include": ["src/lib/**/*.ts"],
+  "exclude": ["**/*.spec.ts"]
+}
