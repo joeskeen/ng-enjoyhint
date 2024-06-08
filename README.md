@@ -159,5 +159,5 @@ Custom settings for a tutorial button
 | <a id="previousButton-1" name="previousButton-1"></a> `previousButton?` | [`IButtonOptions`](README.md#IButtonOptions) | Custom settings for the "Previous" button. |
 | <a id="selector" name="selector"></a> `selector?` | `string` | The CSS selector for the element to focus on. If not specified, the <br />provided instructions will display in the center of the screen. |
 | <a id="skipButton-1" name="skipButton-1"></a> `skipButton?` | [`IButtonOptions`](README.md#IButtonOptions) | Custom settings for the "Skip" button. |
-| <a id="stepEnd" name="stepEnd"></a> `stepEnd?` | () => `void` | Callback to execute when the step is ended. |
-| <a id="stepStart" name="stepStart"></a> `stepStart?` | () => `void` | Callback to execute when the step is started. |
+| <a id="stepEnd" name="stepEnd"></a> `stepEnd?` | () => `void` \| `Promise`\<`void`\> | Callback to execute when the step is ended. |
+| <a id="stepStart" name="stepStart"></a> `stepStart?` | () => `void` \| `Promise`\<`void`\> | Callback to execute when the step is started. |

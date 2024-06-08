@@ -35,7 +35,7 @@ import {
 } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { JsonPipe, NgClass } from '@angular/common';
-import { takeUntil } from 'rxjs/operators';
+import { first, takeUntil } from 'rxjs/operators';
 import { ArrowComponent } from '../support/arrow.component';
 import { ForceFieldComponent } from '../support/force-field.component';
 import { provideWindow } from '../util/dom-helpers';
@@ -190,10 +190,13 @@ export class EnjoyHintComponent {
       .pipe(
         takeUntil(this.thisIsDestroyed),
         filter(([e, s]) => !!e && !!s),
-        switchMap(([element, step]) => fromEvent(element!, step!.event))
+        switchMap(([element, step]) => fromEvent(element!, step!.event).pipe(
+          filter(() => !this.animating()),
+          first()
+        )),
       )
-      .subscribe(() => {
-        this.ref.tutorial.nextStep();
+      .subscribe(async () => {
+        await this.ref.tutorial.nextStep();
         if (!this.step()) {
           this.close(true);
         }
@@ -251,8 +254,8 @@ export class EnjoyHintComponent {
   previous() {
     this.ref.tutorial.previousStep();
   }
-  next() {
-    this.ref.tutorial.nextStep();
+  async next() {
+    await this.ref.tutorial.nextStep();
     if (!this.step()) {
       this.close(true);
     }

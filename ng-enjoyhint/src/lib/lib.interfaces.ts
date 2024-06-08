@@ -93,11 +93,11 @@ export interface ITutorialStep {
   /**
    * Callback to execute when the step is started.
    */
-  stepStart?: () => void;
+  stepStart?: () => Promise<void> | void;
   /**
    * Callback to execute when the step is ended.
    */
-  stepEnd?: () => void;
+  stepEnd?: () => Promise<void> | void;
 }
 
 export interface ITemplateWithContext<T = unknown> {
