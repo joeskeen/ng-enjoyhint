@@ -34,17 +34,17 @@ export class Tutorial {
     this._stepIndex.set(normalizedIndex);
   }
 
-  nextStep() {
-    this.endHook();
+  async nextStep() {
+    await this.endHook();
     this._stepIndex.update((index) => index + 1);
-    this.startHook();
+    await this.startHook();
   }
 
-  private startHook() {
+  private async startHook() {
     const currentStepIndex = this._stepIndex();
     const currentStep = this.step();
     try {
-      currentStep?.stepStart?.();
+      await currentStep?.stepStart?.();
     } catch (e) {
       console.error(
         `Error executing stepEnd hook for step ${currentStepIndex}`,
@@ -54,11 +54,11 @@ export class Tutorial {
     }
   }
 
-  private endHook() {
+  private async endHook() {
     const newStepIndex = this._stepIndex();
     const newStep = this.step();
     try {
-      newStep?.stepEnd?.();
+      await newStep?.stepEnd?.();
     } catch (e) {
       console.error(
         `Error executing stepStart hook for step ${newStepIndex}`,
