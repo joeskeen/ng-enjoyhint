@@ -37,15 +37,32 @@ export class Tutorial {
   async nextStep() {
     await this.endHook();
     this._stepIndex.update((index) => index + 1);
+    while (this.step() && await this.shouldSkip()) {
+      this._stepIndex.update((index) => index + 1);
+    }
     await this.startHook();
   }
 
+  private async shouldSkip() {
+    // return false;
+    const currentStep = this.step();
+    if (!currentStep) {
+      return false;
+    }
+    const shouldSkipFn = currentStep.shouldSkip;
+    if (typeof shouldSkipFn !== 'function') {
+      return !!shouldSkipFn;
+    }
+    const result = await shouldSkipFn();
+    return !!result;
+  }
+
   private async startHook() {
-    const currentStepIndex = this._stepIndex();
     const currentStep = this.step();
     try {
       await currentStep?.stepStart?.();
-    } catch (e) {
+      } catch (e) {
+      const currentStepIndex = this._stepIndex();
       console.error(
         `Error executing stepEnd hook for step ${currentStepIndex}`,
         e,

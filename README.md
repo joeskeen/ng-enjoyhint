@@ -111,15 +111,15 @@ Custom settings for a tutorial button
 
 | Property | Type | Description |
 | :------ | :------ | :------ |
-| <a id="backdropColor" name="backdropColor"></a> `backdropColor` | `string` | Color of the backdrop overlay. Accepts any valid CSS color value.<br /><br />**Default**<br />` 'black' ` |
-| <a id="backdropOpacity" name="backdropOpacity"></a> `backdropOpacity` | `number` | Opacity of the backdrop overlay. Higher values makes text more readable.<br /><br />**Default**<br />` 0.75 ` |
-| <a id="fontFamily" name="fontFamily"></a> `fontFamily` | `string` | Font family to use for the tutorial text and buttons.<br /><br />**Default**<br />` 'sans-serif' ` |
-| <a id="foregroundColor" name="foregroundColor"></a> `foregroundColor` | `string` | Color of text and arrow elements.<br /><br />**Default**<br />` 'white' ` |
-| <a id="nextButton" name="nextButton"></a> `nextButton` | [`IButtonOptions`](README.md#IButtonOptions) | Custom settings for the "Next" button.<br /><br />**Default**<br />` { text: 'Next' } ` |
-| <a id="overlayZIndex" name="overlayZIndex"></a> `overlayZIndex?` | `number` | Z-index of the backdrop.<br /><br />**Default**<br />` 1000 (from @angular/cdk/overlay) ` |
-| <a id="padding" name="padding"></a> `padding` | `number` | Amount of space between the edge of the current step's target element and the backdrop (in pixels)<br /><br />**Default**<br />` 5 ` |
-| <a id="previousButton" name="previousButton"></a> `previousButton` | [`IButtonOptions`](README.md#IButtonOptions) | Custom settings for the "Previous" button.<br /><br />**Default**<br />` { text: 'Previous' } ` |
-| <a id="skipButton" name="skipButton"></a> `skipButton` | [`IButtonOptions`](README.md#IButtonOptions) | Custom settings for the "Skip" button.<br /><br />**Default**<br />` { text: 'Skip' } ` |
+| <a id="backdropColor" name="backdropColor"></a> `backdropColor` | `string` | <p>Color of the backdrop overlay. Accepts any valid CSS color value.</p><p>**Default**</p><code>'black'</code> |
+| <a id="backdropOpacity" name="backdropOpacity"></a> `backdropOpacity` | `number` | <p>Opacity of the backdrop overlay. Higher values makes text more readable.</p><p>**Default**</p><code>0.75</code> |
+| <a id="fontFamily" name="fontFamily"></a> `fontFamily` | `string` | <p>Font family to use for the tutorial text and buttons.</p><p>**Default**</p><code>'sans-serif'</code> |
+| <a id="foregroundColor" name="foregroundColor"></a> `foregroundColor` | `string` | <p>Color of text and arrow elements.</p><p>**Default**</p><code>'white'</code> |
+| <a id="nextButton" name="nextButton"></a> `nextButton` | [`IButtonOptions`](README.md#IButtonOptions) | <p>Custom settings for the "Next" button.</p><p>**Default**</p><code>{ text: 'Next' }</code> |
+| <a id="overlayZIndex" name="overlayZIndex"></a> `overlayZIndex?` | `number` | <p>Z-index of the backdrop.</p><p>**Default**</p><code>1000 (from @angular/cdk/overlay)</code> |
+| <a id="padding" name="padding"></a> `padding` | `number` | <p>Amount of space between the edge of the current step's target element and the backdrop (in pixels)</p><p>**Default**</p><code>5</code> |
+| <a id="previousButton" name="previousButton"></a> `previousButton` | [`IButtonOptions`](README.md#IButtonOptions) | <p>Custom settings for the "Previous" button.</p><p>**Default**</p><code>{ text: 'Previous' }</code> |
+| <a id="skipButton" name="skipButton"></a> `skipButton` | [`IButtonOptions`](README.md#IButtonOptions) | <p>Custom settings for the "Skip" button.</p><p>**Default**</p><code>{ text: 'Skip' }</code> |
 
 ***
 
@@ -151,13 +151,14 @@ Custom settings for a tutorial button
 | Property | Type | Description |
 | :------ | :------ | :------ |
 | <a id="description" name="description"></a> `description` | `string` \| `TemplateRef`\<`any`\> | The main instructions for the step. Keep this short. |
-| <a id="details" name="details"></a> `details?` | `string` \| `TemplateRef`\<`any`\> \| [`ITemplateWithContext`](README.md#ITemplateWithContextT)\<`unknown`\> | Additional text displayed in a smaller font under the description. <br />May be longer (but not too long). |
-| <a id="event" name="event"></a> `event` | `string` | The event to listen for on the element to move onto the next step.<br />Accepts any valid DOM event name, or 'next' to move on when the "Next" button is clicked. |
-| <a id="hidePrevious" name="hidePrevious"></a> `hidePrevious?` | `boolean` | Whether or not to hide the "Previous" button.<br /><br />**Default**<br />` false ` |
-| <a id="hideSkip" name="hideSkip"></a> `hideSkip?` | `boolean` | Whether or not to hide the "Skip" button.<br /><br />**Default**<br />` false ` |
+| <a id="details" name="details"></a> `details?` | `string` \| `TemplateRef`\<`any`\> \| [`ITemplateWithContext`](README.md#ITemplateWithContextT)\<`unknown`\> | Additional text displayed in a smaller font under the description.  May be longer (but not too long). |
+| <a id="event" name="event"></a> `event` | `string` | The event to listen for on the element to move onto the next step. Accepts any valid DOM event name, or 'next' to move on when the "Next" button is clicked. |
+| <a id="hidePrevious" name="hidePrevious"></a> `hidePrevious?` | `boolean` | <p>Whether or not to hide the "Previous" button.</p><p>**Default**</p><code>false</code> |
+| <a id="hideSkip" name="hideSkip"></a> `hideSkip?` | `boolean` | <p>Whether or not to hide the "Skip" button.</p><p>**Default**</p><code>false</code> |
 | <a id="nextButton-1" name="nextButton-1"></a> `nextButton?` | [`IButtonOptions`](README.md#IButtonOptions) | Custom settings for the "Next" button. |
 | <a id="previousButton-1" name="previousButton-1"></a> `previousButton?` | [`IButtonOptions`](README.md#IButtonOptions) | Custom settings for the "Previous" button. |
-| <a id="selector" name="selector"></a> `selector?` | `string` | The CSS selector for the element to focus on. If not specified, the <br />provided instructions will display in the center of the screen. |
+| <a id="selector" name="selector"></a> `selector?` | `string` | The CSS selector for the element to focus on. If not specified, the  provided instructions will display in the center of the screen. |
+| <a id="shouldSkip" name="shouldSkip"></a> `shouldSkip?` | () => `boolean` \| `Promise`\<`boolean`\> | Callback to determine if the step should be skipped. |
 | <a id="skipButton-1" name="skipButton-1"></a> `skipButton?` | [`IButtonOptions`](README.md#IButtonOptions) | Custom settings for the "Skip" button. |
 | <a id="stepEnd" name="stepEnd"></a> `stepEnd?` | () => `void` \| `Promise`\<`void`\> | Callback to execute when the step is ended. |
 | <a id="stepStart" name="stepStart"></a> `stepStart?` | () => `void` \| `Promise`\<`void`\> | Callback to execute when the step is started. |

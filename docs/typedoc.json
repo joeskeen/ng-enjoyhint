@@ -10,7 +10,7 @@
   "plugin": ["typedoc-plugin-markdown"],
   /* typedoc-plugin-markdown@next options, see https://typedoc-plugin-markdown.org/options */
   "preserveAnchorCasing": true,
-  "namedAnchors": true,
+  "useHTMLAnchors": true,
   "outputFileStrategy": "modules",
   "mergeReadme": true,
   "excludeGroups": true,

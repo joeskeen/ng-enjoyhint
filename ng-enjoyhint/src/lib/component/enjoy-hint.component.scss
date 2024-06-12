@@ -102,7 +102,7 @@ p {
         border-radius: 5px;
         color: white;
         font-size: .75rem;
-        width: 5rem;
+        min-width: 5rem;
         padding: .5rem;
         transition: all .25s ease-in-out;
         cursor: pointer;

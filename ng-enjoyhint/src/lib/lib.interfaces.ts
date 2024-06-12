@@ -98,6 +98,10 @@ export interface ITutorialStep {
    * Callback to execute when the step is ended.
    */
   stepEnd?: () => Promise<void> | void;
+  /**
+   * Callback to determine if the step should be skipped.
+   */
+  shouldSkip?: () => Promise<boolean> | boolean;
 }
 
 export interface ITemplateWithContext<T = unknown> {
