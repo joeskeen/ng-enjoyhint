@@ -251,16 +251,25 @@ export class EnjoyHintComponent {
     this.animating.set(false);
   }
 
-  previous() {
+  previous(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+    
     this.ref.tutorial.previousStep();
   }
-  async next() {
+  async next(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+
     await this.ref.tutorial.nextStep();
     if (!this.step()) {
       this.close(true);
     }
   }
-  skip() {
+  skip(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+
     this.close(false);
   }
   close(result = false) {

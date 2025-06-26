@@ -66,7 +66,7 @@
       @if (ref.tutorial.hasPrevious() && !step()?.hidePrevious) {
       <button
         class="previous"
-        (click)="previous()"
+        (click)="previous($event)"
         [style.fontFamily]="options.fontFamily"
         [ngClass]="step()?.previousButton?.className"
       >
@@ -75,7 +75,7 @@
       } @if (step()?.event === 'next') {
       <button
         class="next"
-        (click)="next()"
+        (click)="next($event)"
         [style.fontFamily]="options.fontFamily"
         [ngClass]="step()?.nextButton?.className"
       >
@@ -84,7 +84,7 @@
       } @if (!step()?.hideSkip) {
       <button
         class="skip"
-        (click)="skip()"
+        (click)="skip($event)"
         [style.fontFamily]="options.fontFamily"
         [ngClass]="step()?.skipButton?.className"
       >
