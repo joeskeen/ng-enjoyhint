@@ -59,6 +59,12 @@ MIT
 
 ## EnjoyHintService
 
+### Properties
+
+| Property | Modifier | Type | Default value | Description |
+| :------ | :------ | :------ | :------ | :------ |
+| <a id="inProgress" name="inProgress"></a> `inProgress` | `readonly` | `Signal`\<`boolean`\> | `...` | Whether there is any active tutorial |
+
 ### Methods
 
 <a id="runTutorial" name="runTutorial"></a>
@@ -84,7 +90,7 @@ a promise resolving when the tutorial is closed; resolves to `true` if the tutor
 
 ##### Source
 
-lib/enjoyhint.service.ts:35
+lib/enjoyhint.service.ts:41
 
 ***
 

@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, ElementRef, TemplateRef, ViewChild } from '@angular/core';
 import { CommonModule, JsonPipe } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
 import { EnjoyHintService, ITemplateWithContext } from 'ng-enjoyhint';
 
 type MyTemplateContext = { myValue: {foo: string} };
@@ -8,7 +7,7 @@ type MyTemplateContext = { myValue: {foo: string} };
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, JsonPipe],
+  imports: [CommonModule, JsonPipe],
   template: `
     <ng-template #template1><span class="templateValue">Details is an ng-template</span></ng-template>
     <ng-template #template2 let-myValue="myValue"><div class="templateValue">Details is an ng-template with custom context: <pre><code>{{myValue | json}}</code></pre></div></ng-template>
@@ -62,6 +61,38 @@ export class AppComponent implements AfterViewInit {
       {
         ...toStep(elements[2]),
         details: {template: this.template2, context: { myValue: {foo: 'bar'}}} as ITemplateWithContext<MyTemplateContext>,
+      },
+      {
+        description: 'Steps can have asynchronous start and end hooks',
+        event: 'click',
+        selector: `#dynamic-element`,
+        stepStart: async () => {
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          const dynamicElement = document.createElement('div');
+          dynamicElement.id = 'dynamic-element';
+          dynamicElement.style.position = 'fixed';
+          dynamicElement.style.top = '50%';
+          dynamicElement.style.left = '50%';
+          dynamicElement.style.transform = 'translate(-50%, -50%)';
+          dynamicElement.style.width = '200px';
+          dynamicElement.style.height = '200px';
+          dynamicElement.style.backgroundColor = 'red';
+          dynamicElement.style.transition = 'opacity 1s';
+          dynamicElement.style.opacity = '0';
+          document.body.appendChild(dynamicElement);
+          await new Promise(resolve => setTimeout(resolve, 50));
+          dynamicElement.style.opacity = '1';
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        },
+        stepEnd: async () => {
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          const dynamicElement = document.querySelector<HTMLElement>('#dynamic-element');
+          if (!dynamicElement) return;
+
+          dynamicElement.style.opacity = '0';
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          dynamicElement?.remove();
+        }
       },
       ...elements.slice(3).map(toStep)
     ]

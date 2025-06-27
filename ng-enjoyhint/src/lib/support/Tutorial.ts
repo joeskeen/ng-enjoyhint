@@ -1,9 +1,13 @@
 import { Signal, computed, signal } from '@angular/core';
 import { ITutorialStep } from '../lib.interfaces';
 
+export type Transition = 'start' | 'end' | null;
+
 export class Tutorial {
   private readonly _stepIndex = signal(0);
+  private readonly _transitioning = signal<Transition>(null);
   readonly stepIndex: Signal<number> = this._stepIndex.asReadonly();
+  readonly transitioning: Signal<Transition> = this._transitioning.asReadonly();
   readonly step: Signal<ITutorialStep | undefined> = computed(
     () => this.steps[this.stepIndex()]
   );
@@ -59,29 +63,39 @@ export class Tutorial {
 
   private async startHook() {
     const currentStep = this.step();
-    try {
-      await currentStep?.stepStart?.();
+    if (typeof currentStep?.stepStart === 'function') {
+      try {
+        this._transitioning.set('start');
+        await currentStep.stepStart();
       } catch (e) {
-      const currentStepIndex = this._stepIndex();
-      console.error(
-        `Error executing stepEnd hook for step ${currentStepIndex}`,
-        e,
-        { currentStep }
-      );
+        const currentStepIndex = this._stepIndex();
+        console.error(
+          `Error executing stepStart hook for step ${currentStepIndex}`,
+          e,
+          { currentStep }
+        );
+      } finally {
+        this._transitioning.set(null);
+      }
     }
   }
 
   private async endHook() {
-    const newStepIndex = this._stepIndex();
     const newStep = this.step();
-    try {
-      await newStep?.stepEnd?.();
-    } catch (e) {
-      console.error(
-        `Error executing stepStart hook for step ${newStepIndex}`,
-        e,
-        { newStep }
-      );
+    if (typeof newStep?.stepEnd === 'function') {
+      try {
+        this._transitioning.set('end');
+        await newStep.stepEnd();
+      } catch (e) {
+        const newStepIndex = this._stepIndex();
+        console.error(
+          `Error executing stepEnd hook for step ${newStepIndex}`,
+          e,
+          { newStep }
+        );
+      } finally {
+        this._transitioning.set(null);
+      }
     }
   }
 

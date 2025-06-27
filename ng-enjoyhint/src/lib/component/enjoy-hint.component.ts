@@ -22,7 +22,9 @@ import {
   from,
   fromEvent,
   map,
+  pairwise,
   switchMap,
+  startWith,
 } from 'rxjs';
 import { animate, style, transition, trigger } from '@angular/animations';
 import {
@@ -34,8 +36,8 @@ import {
   PositionStrategy,
 } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { JsonPipe, NgClass } from '@angular/common';
-import { first, takeUntil } from 'rxjs/operators';
+import { NgClass } from '@angular/common';
+import { debounceTime, first, takeUntil } from 'rxjs/operators';
 import { ArrowComponent } from '../support/arrow.component';
 import { ForceFieldComponent } from '../support/force-field.component';
 import { provideWindow } from '../util/dom-helpers';
@@ -49,7 +51,6 @@ import { TextOrTemplateComponent } from '../support/text-or-template.component';
   imports: [
     ForceFieldComponent,
     ArrowComponent,
-    JsonPipe,
     NgClass,
     DirectionPipe,
     TextOrTemplateComponent,
@@ -61,7 +62,7 @@ import { TextOrTemplateComponent } from '../support/text-or-template.component';
       transition(':enter', [style({ opacity: 0 }), animate(500)]),
     ]),
   ],
-  providers: [provideWindow()]
+  providers: [provideWindow()],
 })
 export class EnjoyHintComponent {
   @ViewChild('instructions') instructions!: TemplateRef<any>;
@@ -79,11 +80,14 @@ export class EnjoyHintComponent {
     previousButton: { text: 'Previous' },
   };
   readonly viewSize: Signal<{ width: number; height: number }>;
-  readonly ffSize = computed(() => ({ width: this.viewSize().width + this.options.padding, height: this.viewSize().height + this.options.padding}));
+  readonly ffSize = computed(() => ({
+    width: this.viewSize().width + this.options.padding,
+    height: this.viewSize().height + this.options.padding,
+  }));
   readonly instructionsWidth = computed(() => this.viewSize().width / 4);
   readonly animating = signal(false);
   readonly focusElement = computed(() => {
-    const step = this.ref.tutorial.step();
+    const step = this.step();
     if (!step?.selector) {
       return null;
     }
@@ -125,7 +129,7 @@ export class EnjoyHintComponent {
   });
   readonly step: Signal<ITutorialStep | undefined>;
   readonly options: IEnjoyHintOptions;
-  
+
   private overlayRef: OverlayRef | null = null;
   readonly positionStrategy: Signal<PositionStrategy> = computed(() => {
     const element = this.focusElement();
@@ -140,20 +144,21 @@ export class EnjoyHintComponent {
       .withFlexibleDimensions(false)
       .withPositions(ALL_SIDES);
   });
-  readonly position: WritableSignal<ConnectionPositionPair | undefined> = signal(undefined);
+  readonly position: WritableSignal<ConnectionPositionPair | undefined> =
+    signal(undefined);
   thisIsDestroyed: Observable<void>;
   /**
    * instead of doing actual padding around the focus element (which would allow clicks)
    * outside of the focus element), we'll add some glow around wht focus element but still
    * on the force field
-   * 
+   *
    * white must be used as anything semi-transparent or transparent will not show up
-   * 
+   *
    * @see https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow#length
    */
   readonly focusElementHighlight = computed(() => {
     const padding = this.options.padding;
-    const boxShadow = `0 0 ${padding/2}px ${padding}px white`;
+    const boxShadow = `0 0 ${padding / 2}px ${padding}px white`;
     return boxShadow;
   });
 
@@ -166,7 +171,27 @@ export class EnjoyHintComponent {
     private readonly destroyedRef: DestroyRef,
     private readonly zone: NgZone
   ) {
-    this.step = this.ref.tutorial.step
+    // Consider both the current and previous steps with transitioning state
+    // The new step is only effective once it is no longer transitioning
+    const step$ = combineLatest([
+      toObservable(this.ref.tutorial.step).pipe(
+        startWith(undefined),
+        pairwise()
+      ),
+      toObservable(this.ref.tutorial.transitioning)
+    ]).pipe(
+      debounceTime(50), // since both start and end hooks set this, make sure it's done with all transitioning
+      map(([[prev, curr], transition]) => {
+        if (transition === 'start') {
+          return prev;
+        }
+        return curr;
+      })
+    );
+
+    // Convert back to a signal
+    this.step = toSignal(step$, { initialValue: undefined });
+
     this.options = {
       ...EnjoyHintComponent.defaultOptions,
       ...ref.options,
@@ -190,10 +215,12 @@ export class EnjoyHintComponent {
       .pipe(
         takeUntil(this.thisIsDestroyed),
         filter(([e, s]) => !!e && !!s),
-        switchMap(([element, step]) => fromEvent(element!, step!.event).pipe(
-          filter(() => !this.animating()),
-          first()
-        )),
+        switchMap(([element, step]) =>
+          fromEvent(element!, step!.event).pipe(
+            filter(() => !this.animating()),
+            first()
+          )
+        )
       )
       .subscribe(async () => {
         await this.ref.tutorial.nextStep();
@@ -204,7 +231,11 @@ export class EnjoyHintComponent {
 
     effect(
       () => {
-        this.step(); // even though we don't use it, this is how we make the effect dependent on the step
+        const currentStep = this.step(); // even though we don't use it, this is how we make the effect dependent on the step
+        if (!currentStep) {
+          return;
+        }
+        console.log({ currentStep });
         const overlayRef = this.overlayRef;
         overlayRef?.detach();
         overlayRef?.dispose();
@@ -216,9 +247,10 @@ export class EnjoyHintComponent {
   }
 
   createOverlay() {
+    console.log('creating overlay...');
     const step = this.step();
     const positionStrategy = this.positionStrategy();
-    const element = this.focusElement();
+    this.focusElement();
     if (!step || !positionStrategy) {
       return;
     }
@@ -231,6 +263,10 @@ export class EnjoyHintComponent {
         });
     }
 
+    this.overlayRef?.detach();
+    this.overlayRef?.dispose();
+    this.overlayRef = null;
+    
     const overlayRef = this.overlay.create({
       positionStrategy,
       hasBackdrop: false,
@@ -252,14 +288,16 @@ export class EnjoyHintComponent {
   }
 
   previous(event: Event) {
-    event.preventDefault();
+    event.stopImmediatePropagation();
     event.stopPropagation();
-    
+    event.preventDefault();
+
     this.ref.tutorial.previousStep();
   }
   async next(event: Event) {
-    event.preventDefault();
+    event.stopImmediatePropagation();
     event.stopPropagation();
+    event.preventDefault();
 
     await this.ref.tutorial.nextStep();
     if (!this.step()) {
@@ -267,8 +305,9 @@ export class EnjoyHintComponent {
     }
   }
   skip(event: Event) {
-    event.preventDefault();
+    event.stopImmediatePropagation();
     event.stopPropagation();
+    event.preventDefault();
 
     this.close(false);
   }

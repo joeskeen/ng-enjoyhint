@@ -13,6 +13,7 @@ import { Component, Input } from '@angular/core';
     '[style.maxHeight]': 'size.height + "px"',
     '[style.top]': 'position.y + "px"',
     '[style.left]': 'position.x + "px"',
+    '(click)': 'eventBlackHole($event)',
   },
   styles: [
     `
@@ -27,4 +28,11 @@ import { Component, Input } from '@angular/core';
 export class ForceFieldComponent {
   @Input() size!: { width: number; height: number; };
   @Input() position!: { x: number; y: number; };
+
+  eventBlackHole(event: Event) {
+    event.stopImmediatePropagation();
+    event.stopPropagation();
+    event.preventDefault();
+    return false;
+  }
 }
