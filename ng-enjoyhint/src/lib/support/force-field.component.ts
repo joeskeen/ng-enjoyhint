@@ -14,6 +14,8 @@ import { Component, Input } from '@angular/core';
     '[style.top]': 'position.y + "px"',
     '[style.left]': 'position.x + "px"',
     '(click)': 'eventBlackHole($event)',
+    '(mousedown)': 'eventBlackHole($event)',
+    '(touchstart)': 'eventBlackHole($event)'
   },
   styles: [
     `

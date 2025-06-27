@@ -67,6 +67,7 @@
       <button
         class="previous"
         (click)="previous($event)"
+        (mousedown)="eventBlackHole($event)"
         [style.fontFamily]="options.fontFamily"
         [ngClass]="step()?.previousButton?.className"
       >
@@ -76,6 +77,7 @@
       <button
         class="next"
         (click)="next($event)"
+        (mousedown)="eventBlackHole($event)"
         [style.fontFamily]="options.fontFamily"
         [ngClass]="step()?.nextButton?.className"
       >
@@ -85,6 +87,7 @@
       <button
         class="skip"
         (click)="skip($event)"
+        (mousedown)="eventBlackHole($event)"
         [style.fontFamily]="options.fontFamily"
         [ngClass]="step()?.skipButton?.className"
       >

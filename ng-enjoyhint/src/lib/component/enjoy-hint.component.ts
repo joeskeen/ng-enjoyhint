@@ -288,16 +288,13 @@ export class EnjoyHintComponent {
   }
 
   previous(event: Event) {
-    event.stopImmediatePropagation();
-    event.stopPropagation();
-    event.preventDefault();
+    this.eventBlackHole(event);
 
     this.ref.tutorial.previousStep();
   }
+
   async next(event: Event) {
-    event.stopImmediatePropagation();
-    event.stopPropagation();
-    event.preventDefault();
+    this.eventBlackHole(event);
 
     await this.ref.tutorial.nextStep();
     if (!this.step()) {
@@ -305,13 +302,17 @@ export class EnjoyHintComponent {
     }
   }
   skip(event: Event) {
-    event.stopImmediatePropagation();
-    event.stopPropagation();
-    event.preventDefault();
+    this.eventBlackHole(event);
 
     this.close(false);
   }
   close(result = false) {
     this.ref.close(result);
+  }
+
+  eventBlackHole(event: Event) {
+    event.stopImmediatePropagation();
+    event.stopPropagation();
+    event.preventDefault();
   }
 }
