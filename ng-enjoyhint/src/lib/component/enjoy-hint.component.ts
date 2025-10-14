@@ -173,7 +173,7 @@ export class EnjoyHintComponent {
   ) {
     // Consider both the current and previous steps with transitioning state
     // The new step is only effective once it is no longer transitioning
-    const step$ = combineLatest([
+    const transition$ = combineLatest([
       toObservable(this.ref.tutorial.step).pipe(
         startWith(undefined),
         pairwise()
@@ -181,6 +181,8 @@ export class EnjoyHintComponent {
       toObservable(this.ref.tutorial.transitioning)
     ]).pipe(
       debounceTime(50), // since both start and end hooks set this, make sure it's done with all transitioning
+    );
+    const step$ = transition$.pipe(
       map(([[prev, curr], transition]) => {
         if (transition === 'start') {
           return prev;
@@ -188,6 +190,12 @@ export class EnjoyHintComponent {
         return curr;
       })
     );
+
+    transition$.subscribe(([[prev, curr], transition]) => {
+      if (!transition && !!prev && !curr) {
+        this.close();
+      }
+    })
 
     // Convert back to a signal
     this.step = toSignal(step$, { initialValue: undefined });
@@ -247,7 +255,6 @@ export class EnjoyHintComponent {
   }
 
   createOverlay() {
-    console.log('creating overlay...');
     const step = this.step();
     const positionStrategy = this.positionStrategy();
     this.focusElement();
