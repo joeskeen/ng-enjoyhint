@@ -15,7 +15,7 @@ export class Tutorial {
   readonly steps: ITutorialStep[];
 
   constructor(steps: ITutorialStep[]) {
-    const lastStep = steps.at(-1);
+    const lastStep = steps[steps.length - 1];
     if (lastStep) {
       lastStep.nextButton = {
         text: 'Finish',

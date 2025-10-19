@@ -6,6 +6,8 @@
     "inlineSourceMap": true,
     "inlineSources": true,
     "sourceMap": false,
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM"]
   },
   "angularCompilerOptions": {
     "compilationMode": "partial"

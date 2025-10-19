@@ -55,32 +55,36 @@ MIT
 
 ## API
 
-<a id="EnjoyHintService" name="EnjoyHintService"></a>
+<a id="enjoyhintservice"></a>
 
 ## EnjoyHintService
 
+Defined in: enjoyhint.service.ts:21
+
 ### Properties
 
-| Property | Modifier | Type | Default value | Description |
-| :------ | :------ | :------ | :------ | :------ |
-| <a id="inProgress" name="inProgress"></a> `inProgress` | `readonly` | `Signal`\<`boolean`\> | `...` | Whether there is any active tutorial |
+| Property | Modifier | Type | Description | Defined in |
+| ------ | ------ | ------ | ------ | ------ |
+| <a id="inprogress"></a> `inProgress` | `readonly` | `Signal`\<`boolean`\> | Whether there is any active tutorial | enjoyhint.service.ts:31 |
 
 ### Methods
 
-<a id="runTutorial" name="runTutorial"></a>
+<a id="runtutorial"></a>
 
 #### runTutorial()
 
-> **runTutorial**(`steps`, `options`?): `Promise`\<`boolean`\>
+> **runTutorial**(`steps`, `options?`): `Promise`\<`boolean`\>
+
+Defined in: enjoyhint.service.ts:41
 
 Run an interactive tutorial
 
 ##### Parameters
 
 | Parameter | Type | Description |
-| :------ | :------ | :------ |
-| `steps` | [`ITutorialStep`](README.md#ITutorialStep)[] | the tutorial steps to run |
-| `options`? | `Partial`\<[`IEnjoyHintOptions`](README.md#IEnjoyHintOptions)\> | optional object to override the default behavior |
+| ------ | ------ | ------ |
+| `steps` | [`ITutorialStep`](#itutorialstep)[] | the tutorial steps to run |
+| `options?` | `Partial`\<[`IEnjoyHintOptions`](#ienjoyhintoptions)\> | optional object to override the default behavior |
 
 ##### Returns
 
@@ -88,83 +92,87 @@ Run an interactive tutorial
 
 a promise resolving when the tutorial is closed; resolves to `true` if the tutorial was completed, `false` if it was skipped
 
-##### Source
-
-lib/enjoyhint.service.ts:41
-
 ***
 
-<a id="IButtonOptions" name="IButtonOptions"></a>
+<a id="ibuttonoptions"></a>
 
 ## IButtonOptions
+
+Defined in: lib.interfaces.ts:113
 
 Custom settings for a tutorial button
 
 ### Properties
 
-| Property | Type | Description |
-| :------ | :------ | :------ |
-| <a id="className" name="className"></a> `className?` | `string` | Custom CSS class to apply to the button |
-| <a id="text" name="text"></a> `text` | `string` | Text to display on the button |
+| Property | Type | Description | Defined in |
+| ------ | ------ | ------ | ------ |
+| <a id="classname"></a> `className?` | `string` | Custom CSS class to apply to the button | lib.interfaces.ts:117 |
+| <a id="text"></a> `text` | `string` | Text to display on the button | lib.interfaces.ts:115 |
 
 ***
 
-<a id="IEnjoyHintOptions" name="IEnjoyHintOptions"></a>
+<a id="ienjoyhintoptions"></a>
 
 ## IEnjoyHintOptions
 
+Defined in: lib.interfaces.ts:3
+
 ### Properties
 
-| Property | Type | Description |
-| :------ | :------ | :------ |
-| <a id="backdropColor" name="backdropColor"></a> `backdropColor` | `string` | <p>Color of the backdrop overlay. Accepts any valid CSS color value.</p><p>**Default**</p><code>'black'</code> |
-| <a id="backdropOpacity" name="backdropOpacity"></a> `backdropOpacity` | `number` | <p>Opacity of the backdrop overlay. Higher values makes text more readable.</p><p>**Default**</p><code>0.75</code> |
-| <a id="fontFamily" name="fontFamily"></a> `fontFamily` | `string` | <p>Font family to use for the tutorial text and buttons.</p><p>**Default**</p><code>'sans-serif'</code> |
-| <a id="foregroundColor" name="foregroundColor"></a> `foregroundColor` | `string` | <p>Color of text and arrow elements.</p><p>**Default**</p><code>'white'</code> |
-| <a id="nextButton" name="nextButton"></a> `nextButton` | [`IButtonOptions`](README.md#IButtonOptions) | <p>Custom settings for the "Next" button.</p><p>**Default**</p><code>{ text: 'Next' }</code> |
-| <a id="overlayZIndex" name="overlayZIndex"></a> `overlayZIndex?` | `number` | <p>Z-index of the backdrop.</p><p>**Default**</p><code>1000 (from @angular/cdk/overlay)</code> |
-| <a id="padding" name="padding"></a> `padding` | `number` | <p>Amount of space between the edge of the current step's target element and the backdrop (in pixels)</p><p>**Default**</p><code>5</code> |
-| <a id="previousButton" name="previousButton"></a> `previousButton` | [`IButtonOptions`](README.md#IButtonOptions) | <p>Custom settings for the "Previous" button.</p><p>**Default**</p><code>{ text: 'Previous' }</code> |
-| <a id="skipButton" name="skipButton"></a> `skipButton` | [`IButtonOptions`](README.md#IButtonOptions) | <p>Custom settings for the "Skip" button.</p><p>**Default**</p><code>{ text: 'Skip' }</code> |
+| Property | Type | Description | Defined in |
+| ------ | ------ | ------ | ------ |
+| <a id="backdropcolor"></a> `backdropColor` | `string` | Color of the backdrop overlay. Accepts any valid CSS color value. **Default** `'black'` | lib.interfaces.ts:18 |
+| <a id="backdropopacity"></a> `backdropOpacity` | `number` | Opacity of the backdrop overlay. Higher values makes text more readable. **Default** `0.75` | lib.interfaces.ts:23 |
+| <a id="fontfamily"></a> `fontFamily` | `string` | Font family to use for the tutorial text and buttons. **Default** `'sans-serif'` | lib.interfaces.ts:13 |
+| <a id="foregroundcolor"></a> `foregroundColor` | `string` | Color of text and arrow elements. **Default** `'white'` | lib.interfaces.ts:28 |
+| <a id="nextbutton"></a> `nextButton` | [`IButtonOptions`](#ibuttonoptions) | Custom settings for the "Next" button. **Default** `{ text: 'Next' }` | lib.interfaces.ts:33 |
+| <a id="overlayzindex"></a> `overlayZIndex?` | `number` | Z-index of the backdrop. **Default** `1000 (from @angular/cdk/overlay)` | lib.interfaces.ts:48 |
+| <a id="padding"></a> `padding` | `number` | Amount of space between the edge of the current step's target element and the backdrop (in pixels) **Default** `5` | lib.interfaces.ts:8 |
+| <a id="previousbutton"></a> `previousButton` | [`IButtonOptions`](#ibuttonoptions) | Custom settings for the "Previous" button. **Default** `{ text: 'Previous' }` | lib.interfaces.ts:43 |
+| <a id="skipbutton"></a> `skipButton` | [`IButtonOptions`](#ibuttonoptions) | Custom settings for the "Skip" button. **Default** `{ text: 'Skip' }` | lib.interfaces.ts:38 |
 
 ***
 
-<a id="ITemplateWithContextT" name="ITemplateWithContextT"></a>
+<a id="itemplatewithcontext"></a>
 
-## ITemplateWithContext\<T\>
+## ITemplateWithContext
 
-### Type parameters
+Defined in: lib.interfaces.ts:107
 
-| Type parameter | Value |
-| :------ | :------ |
+### Type Parameters
+
+| Type Parameter | Default type |
+| ------ | ------ |
 | `T` | `unknown` |
 
 ### Properties
 
-| Property | Type |
-| :------ | :------ |
-| <a id="context" name="context"></a> `context` | `T` |
-| <a id="template" name="template"></a> `template` | `TemplateRef`\<`T`\> |
+| Property | Type | Defined in |
+| ------ | ------ | ------ |
+| <a id="context"></a> `context` | `T` | lib.interfaces.ts:109 |
+| <a id="template"></a> `template` | `TemplateRef`\<`T`\> | lib.interfaces.ts:108 |
 
 ***
 
-<a id="ITutorialStep" name="ITutorialStep"></a>
+<a id="itutorialstep"></a>
 
 ## ITutorialStep
 
+Defined in: lib.interfaces.ts:51
+
 ### Properties
 
-| Property | Type | Description |
-| :------ | :------ | :------ |
-| <a id="description" name="description"></a> `description` | `string` \| `TemplateRef`\<`any`\> | The main instructions for the step. Keep this short. |
-| <a id="details" name="details"></a> `details?` | `string` \| `TemplateRef`\<`any`\> \| [`ITemplateWithContext`](README.md#ITemplateWithContextT)\<`unknown`\> | Additional text displayed in a smaller font under the description.  May be longer (but not too long). |
-| <a id="event" name="event"></a> `event` | `string` | The event to listen for on the element to move onto the next step. Accepts any valid DOM event name, or 'next' to move on when the "Next" button is clicked. |
-| <a id="hidePrevious" name="hidePrevious"></a> `hidePrevious?` | `boolean` | <p>Whether or not to hide the "Previous" button.</p><p>**Default**</p><code>false</code> |
-| <a id="hideSkip" name="hideSkip"></a> `hideSkip?` | `boolean` | <p>Whether or not to hide the "Skip" button.</p><p>**Default**</p><code>false</code> |
-| <a id="nextButton-1" name="nextButton-1"></a> `nextButton?` | [`IButtonOptions`](README.md#IButtonOptions) | Custom settings for the "Next" button. |
-| <a id="previousButton-1" name="previousButton-1"></a> `previousButton?` | [`IButtonOptions`](README.md#IButtonOptions) | Custom settings for the "Previous" button. |
-| <a id="selector" name="selector"></a> `selector?` | `string` | The CSS selector for the element to focus on. If not specified, the  provided instructions will display in the center of the screen. |
-| <a id="shouldSkip" name="shouldSkip"></a> `shouldSkip?` | () => `boolean` \| `Promise`\<`boolean`\> | Callback to determine if the step should be skipped. |
-| <a id="skipButton-1" name="skipButton-1"></a> `skipButton?` | [`IButtonOptions`](README.md#IButtonOptions) | Custom settings for the "Skip" button. |
-| <a id="stepEnd" name="stepEnd"></a> `stepEnd?` | () => `void` \| `Promise`\<`void`\> | Callback to execute when the step is ended. |
-| <a id="stepStart" name="stepStart"></a> `stepStart?` | () => `void` \| `Promise`\<`void`\> | Callback to execute when the step is started. |
+| Property | Type | Description | Defined in |
+| ------ | ------ | ------ | ------ |
+| <a id="description"></a> `description` | `string` \| `TemplateRef`\<`any`\> | The main instructions for the step. Keep this short. | lib.interfaces.ts:60 |
+| <a id="details"></a> `details?` | `string` \| `TemplateRef`\<`any`\> \| [`ITemplateWithContext`](#itemplatewithcontext)\<`unknown`\> | Additional text displayed in a smaller font under the description. May be longer (but not too long). | lib.interfaces.ts:70 |
+| <a id="event"></a> `event` | `string` | The event to listen for on the element to move onto the next step. Accepts any valid DOM event name, or 'next' to move on when the "Next" button is clicked. | lib.interfaces.ts:56 |
+| <a id="hideprevious"></a> `hidePrevious?` | `boolean` | Whether or not to hide the "Previous" button. **Default** `false` | lib.interfaces.ts:92 |
+| <a id="hideskip"></a> `hideSkip?` | `boolean` | Whether or not to hide the "Skip" button. **Default** `false` | lib.interfaces.ts:87 |
+| <a id="nextbutton-1"></a> `nextButton?` | [`IButtonOptions`](#ibuttonoptions) | Custom settings for the "Next" button. | lib.interfaces.ts:74 |
+| <a id="previousbutton-1"></a> `previousButton?` | [`IButtonOptions`](#ibuttonoptions) | Custom settings for the "Previous" button. | lib.interfaces.ts:82 |
+| <a id="selector"></a> `selector?` | `string` | The CSS selector for the element to focus on. If not specified, the provided instructions will display in the center of the screen. | lib.interfaces.ts:65 |
+| <a id="shouldskip"></a> `shouldSkip?` | () => `boolean` \| `Promise`\<`boolean`\> | Callback to determine if the step should be skipped. | lib.interfaces.ts:104 |
+| <a id="skipbutton-1"></a> `skipButton?` | [`IButtonOptions`](#ibuttonoptions) | Custom settings for the "Skip" button. | lib.interfaces.ts:78 |
+| <a id="stepend"></a> `stepEnd?` | () => `void` \| `Promise`\<`void`\> | Callback to execute when the step is ended. | lib.interfaces.ts:100 |
+| <a id="stepstart"></a> `stepStart?` | () => `void` \| `Promise`\<`void`\> | Callback to execute when the step is started. | lib.interfaces.ts:96 |
